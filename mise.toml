@@ -1,0 +1,52 @@
+[tools]
+rust = { version = "stable", components = "rustfmt,clippy", targets = "aarch64-apple-darwin,x86_64-apple-darwin" }
+hk   = "latest"
+pkl  = "latest"
+
+[settings]
+experimental = true
+
+[tasks.install]
+description = "Build the workflow and open it in Alfred"
+depends     = ["build"]
+run         = "open dist/*.alfredworkflow"
+
+[tasks.test]
+description = "Run tests"
+run         = "cargo test --all-features"
+
+[tasks.lint]
+description = "Run linters"
+run         = "hk check"
+
+[tasks.fix]
+description = "Auto-fix lint issues"
+run         = "hk fix"
+
+[tasks.clippy]
+description = "Run clippy"
+run         = "cargo clippy --all-targets --all-features -- -D warnings"
+
+[tasks.fmt]
+description = "Format code"
+run         = "cargo fmt --all"
+
+[tasks.fmt-check]
+description = "Check formatting"
+run         = "cargo fmt --all -- --check"
+
+[tasks.version]
+description = "Print current version"
+run         = "cargo pkgid | sed -E 's/.*[#@]//'"
+
+[tasks.bump-patch]
+description = "Bump patch version"
+run         = "cargo set-version --bump patch"
+
+[tasks.bump-minor]
+description = "Bump minor version"
+run         = "cargo set-version --bump minor"
+
+[tasks.bump-major]
+description = "Bump major version"
+run         = "cargo set-version --bump major"

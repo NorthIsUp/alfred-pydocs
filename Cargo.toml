@@ -1,0 +1,46 @@
+[package]
+name        = "alfred-pydocs"
+version     = "0.1.0"
+edition     = "2024"
+rust-version = "1.89"
+description = "Alfred workflow: ruff, ty and pyright rules and PEPs"
+license     = "MIT"
+readme      = "README.md"
+repository  = "https://github.com/northisup/alfred-pydocs"
+publish     = false
+
+[lints.rust]
+unsafe_code         = "forbid"
+missing_docs        = "warn"
+unreachable_pub     = "warn"
+unused_must_use     = "deny"
+
+[lints.clippy]
+pedantic            = { level = "warn", priority = -1 }
+nursery             = { level = "warn", priority = -1 }
+unwrap_used         = "warn"
+expect_used         = "warn"
+panic               = "warn"
+todo                = "warn"
+dbg_macro           = "warn"
+print_stdout        = "allow"
+print_stderr        = "allow"
+module_name_repetitions = "allow"
+missing_errors_doc  = "allow"
+missing_panics_doc  = "allow"
+
+[profile.release]
+lto          = "thin"
+codegen-units = 1
+strip        = "symbols"
+
+# Alfred runs `./alfred` from the workflow folder, so the binary name never changes.
+[[bin]]
+name = "alfred"
+path = "src/main.rs"
+
+[dependencies]
+tokio          = { version = "1", features = ["macros", "rt"] }
+we-love-alfred = { git = "https://github.com/NorthIsUp/north" }
+
+[dev-dependencies]

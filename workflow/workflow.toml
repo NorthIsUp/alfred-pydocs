@@ -1,0 +1,58 @@
+# ruff, ty and pyright rules and PEPs. Format: https://github.com/NorthIsUp/north/tree/main/crates/we-love-alfred
+cache = "alfred-pydocs"
+
+# `ruff`, `ty`, `pyright` and `pep` search one source; `py` searches them all. Enter opens the docs.
+[[route]]
+keywords = { ruff = "ruff", ty = "ty", pyright = "pyright", pep = "pep", py = "" }
+db = "{env.alfred_workflow_cache:-~/.cache/alfred/pydocs}/rules.db"
+error = "Lookup failed"
+refresh_every = 604800
+# An exact code first ("e501", "PEP 8"), then codes with the query as a prefix, then FTS rank.
+sql = """
+select tool, code, title, subtitle, url from rules
+where rules match :fts and ('{value}' = '' or tool = '{value}')
+order by lower(code) not in (:words, 'pep ' || :words), lower(code) not like :first || '%', length(code), rank
+limit 50"""
+empty_sql = "select tool, code, title, subtitle, url from rules where '{value}' = '' or tool = '{value}' order by tool, code limit 50"
+
+[[route.populate]]
+command = ["./run-tool", "ruff", "rule", "--all", "--output-format", "json"]
+table = "rules"
+fts = true
+jq = '''
+.[] | select((.code // "") != "") | {tool: "ruff", code, title: "\(.code) · \(.name)",
+  subtitle: "\(.linter) · \((((.explanation | capture("## What it does\\s+(?<d>[^#]+)") | .d) // .summary) | gsub("[`\\s]+"; " ") | ltrimstr(" ") | rtrimstr(" ")))",
+  url: "https://docs.astral.sh/ruff/rules/\(.name)/"}'''
+
+[[route.populate]]
+command = ["./run-tool", "ty", "explain", "rule", "--output-format", "json"]
+table = "rules"
+fts = true
+jq = '.[] | {tool: "ty", code: .name, title: .name, subtitle: "ty · \(.summary)", url: "https://docs.astral.sh/ty/reference/rules/#\(.name)"}'
+
+[[route.populate]]
+url = "https://raw.githubusercontent.com/microsoft/pyright/main/packages/vscode-pyright/schemas/pyrightconfig.schema.json"
+table = "rules"
+fts = true
+jq = '''
+.definitions | to_entries[] | select(.key | startswith("report")) | {tool: "pyright", code: .key, title: .key,
+  subtitle: "pyright · \(.value.title // .value.description // "")",
+  url: "https://microsoft.github.io/pyright/#/configuration?id=\(.key | ascii_downcase)"}'''
+
+[[route.populate]]
+url = "https://peps.python.org/api/peps.json"
+table = "rules"
+fts = true
+jq = '.[] | {tool: "pep", code: "PEP \(.number)", title: "PEP \(.number): \(.title)", subtitle: "\(.status) · \(.type)", url}'
+
+[[route.item]]
+title = "{title}"
+subtitle = "{subtitle}"
+arg = "open {url}"
+copy = "{code}"
+largetype = "{title}"
+autocomplete = "{keyword} {code}"
+icon = { path = "icons/{tool}.png" }
+# No uid or match: results keep the SQL order and Alfred doesn't reorder them by past picks.
+uid = ""
+match = ""

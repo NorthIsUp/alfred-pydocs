@@ -1,0 +1,94 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: jdx/mise-action@v2
+        with:
+          experimental: true
+      - uses: Swatinem/rust-cache@v2
+      - run: cargo fmt --all -- --check
+      - run: cargo clippy --all-targets --all-features -- -D warnings
+      - run: cargo test --all-features
+
+  release:
+    # Single-pipeline release: GitHub Actions can't trigger workflows from
+    # tags pushed by GITHUB_TOKEN, so tag + release all happen in this one
+    # job after tests pass on main. lipo and the Apple targets need macOS.
+    needs: test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - uses: jdx/mise-action@v2
+        with:
+          experimental: true
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: Detect version bump
+        id: version
+        run: |
+          set -euo pipefail
+          new=$(cargo metadata --no-deps --format-version=1 \
+            | python3 -c 'import json,sys; print(json.load(sys.stdin)["packages"][0]["version"])')
+          if old=$(git show HEAD~1:Cargo.toml 2>/dev/null \
+            | python3 -c '
+          import sys, tomllib
+          print(tomllib.loads(sys.stdin.read())["package"]["version"])
+          '); then :; else old=""; fi
+          echo "old=$old" >> "$GITHUB_OUTPUT"
+          echo "new=$new" >> "$GITHUB_OUTPUT"
+          if [ "$old" != "$new" ] && [ -n "$new" ]; then
+            echo "bumped=true" >> "$GITHUB_OUTPUT"
+            echo "tag=v$new" >> "$GITHUB_OUTPUT"
+            echo "Version bumped: $old -> $new"
+          else
+            echo "bumped=false" >> "$GITHUB_OUTPUT"
+            echo "No version change ($old == $new)"
+          fi
+
+      - name: Tag release
+        if: steps.version.outputs.bumped == 'true'
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "$TAG" -m "$TAG"
+          git push origin "$TAG"
+
+      - name: Build the workflow
+        if: steps.version.outputs.bumped == 'true'
+        run: mise run build
+
+      - name: Create GitHub Release
+        if: steps.version.outputs.bumped == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          gh release create "$TAG" dist/*.alfredworkflow \
+            --title "$TAG" \
+            --generate-notes

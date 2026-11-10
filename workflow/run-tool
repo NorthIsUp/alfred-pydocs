@@ -1,0 +1,6 @@
+#!/bin/sh
+# run-tool <tool> <args…>: Alfred runs outside any project, where a mise shim may have no
+# version, so fall back to the latest release through mise, then uvx.
+tool=$1
+shift
+"$tool" "$@" 2>/dev/null || mise exec "$tool@latest" -- "$tool" "$@" 2>/dev/null || uvx "$tool" "$@"

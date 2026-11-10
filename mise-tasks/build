@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#MISE description="Build the universal binary and zip workflow/ into dist/<name>.alfredworkflow"
+set -euo pipefail
+name=$(sed -n 's/^name *= *"\(.*\)"/\1/p' Cargo.toml | head -1)
+version=$(cargo pkgid | sed -E 's/.*[#@]//')
+for target in aarch64-apple-darwin x86_64-apple-darwin; do
+	cargo build --release --locked --target "$target"
+done
+lipo -create -output workflow/alfred target/{aarch64,x86_64}-apple-darwin/release/alfred
+# Cargo.toml owns the version; Alfred reads it from info.plist.
+plutil -replace version -string "$version" workflow/info.plist
+mkdir -p dist
+rm -f "dist/$name.alfredworkflow"
+(cd workflow && zip -qr "../dist/$name.alfredworkflow" . -x prefs.plist)
+echo "dist/$name.alfredworkflow"
