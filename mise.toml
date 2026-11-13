@@ -1,6 +1,7 @@
 [tools]
 rust = { version = "stable", components = "rustfmt,clippy", targets = "aarch64-apple-darwin,x86_64-apple-darwin" }
 hk   = "latest"
+"cargo:cargo-edit" = "latest"  # `cargo set-version` for the bump tasks
 pkl  = "latest"
 
 [settings]
