@@ -73,6 +73,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>68E435E0-C2B2-4D17-B7AB-8F4EDCB3BC73</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>C0B7F4A1-2D3E-4F56-8A9B-0C1D2E3F4A52</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 	</dict>
 	<key>createdby</key>
 	<string>Adam Hitchcock</string>
@@ -296,6 +309,55 @@
 				<key>escaping</key>
 				<integer>0</integer>
 				<key>keyword</key>
+				<string>pydocs</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>./alfred "update"</string>
+				<key>scriptargtype</key>
+				<integer>1</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string>Update Python Docs</string>
+				<key>type</key>
+				<integer>11</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>68E435E0-C2B2-4D17-B7AB-8F4EDCB3BC73</string>
+			<key>version</key>
+			<integer>3</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>alfredfiltersresultsmatchmode</key>
+				<integer>0</integer>
+				<key>argumenttreatemptyqueryasnil</key>
+				<true/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>0</integer>
+				<key>keyword</key>
 				<string>py</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
@@ -405,9 +467,38 @@ esac</string>
 			<key>ypos</key>
 			<real>440</real>
 		</dict>
+		<key>68E435E0-C2B2-4D17-B7AB-8F4EDCB3BC73</key>
+		<dict>
+			<key>xpos</key>
+			<real>200</real>
+			<key>ypos</key>
+			<real>680</real>
+		</dict>
 	</dict>
 	<key>userconfigurationconfig</key>
-	<array/>
+	<array>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>default</key>
+				<string></string>
+				<key>placeholder</key>
+				<string>github_pat_...</string>
+				<key>required</key>
+				<false/>
+				<key>trim</key>
+				<true/>
+			</dict>
+			<key>description</key>
+			<string>Optional; GitHub's anonymous rate limit is usually enough. Empty uses `gh auth token` when available.</string>
+			<key>label</key>
+			<string>GitHub token for updates</string>
+			<key>type</key>
+			<string>textfield</string>
+			<key>variable</key>
+			<string>update_github_token</string>
+		</dict>
+	</array>
 	<key>variablesdontexport</key>
 	<array/>
 	<key>version</key>

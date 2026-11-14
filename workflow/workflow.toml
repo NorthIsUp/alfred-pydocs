@@ -1,6 +1,12 @@
 # ruff, ty and pyright rules and PEPs. Format: https://github.com/NorthIsUp/north/tree/main/crates/we-love-alfred
 cache = "alfred-pydocs"
 
+# Checks GitHub daily and opens a newer release so Alfred offers its update dialog. The `pydocs`
+# keyword shows the check's live progress.
+[update]
+repo = "NorthIsUp/alfred-pydocs"
+asset = "alfred-pydocs.alfredworkflow"
+
 # `ruff`, `ty`, `pyright` and `pep` search one source; `py` searches them all, plus the standard
 # library's documented classes, functions and modules. Enter opens the docs.
 [[route]]
