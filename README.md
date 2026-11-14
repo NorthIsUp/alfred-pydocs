@@ -14,7 +14,7 @@ is, and press Enter to open its docs. ⌘C copies the code.
 Install: download `alfred-pydocs.alfredworkflow` from the
 [latest release](https://github.com/NorthIsUp/alfred-pydocs/releases/latest) and open it.
 It then checks for new releases daily and opens them, so Alfred offers its update dialog; `pydocs`
-checks now and shows progress.
+or `py update` checks now and shows progress. `py clear cache` rebuilds the index.
 
 The index is built on first use and rebuilt weekly: ruff and ty rules from the installed tools
 (falling back to `mise exec <tool>@latest`, then `uvx`), pyright rules from its config schema,
