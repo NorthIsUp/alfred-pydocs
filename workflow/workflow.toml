@@ -1,7 +1,8 @@
 # ruff, ty and pyright rules and PEPs. Format: https://github.com/NorthIsUp/north/tree/main/crates/we-love-alfred
 cache = "alfred-pydocs"
 
-# `ruff`, `ty`, `pyright` and `pep` search one source; `py` searches them all. Enter opens the docs.
+# `ruff`, `ty`, `pyright` and `pep` search one source; `py` searches them all, plus the standard
+# library's documented classes, functions and modules. Enter opens the docs.
 [[route]]
 keywords = { ruff = "ruff", ty = "ty", pyright = "pyright", pep = "pep", py = "" }
 db = "{env.alfred_workflow_cache:-~/.cache/alfred/pydocs}/rules.db"
@@ -44,6 +45,13 @@ url = "https://peps.python.org/api/peps.json"
 table = "rules"
 fts = true
 jq = '.[] | {tool: "pep", code: "PEP \(.number)", title: "PEP \(.number): \(.title)", subtitle: "\(.status) · \(.type)", url}'
+
+[[route.populate]]
+# The standard library's documented objects, from docs.python.org's Sphinx inventory.
+command = ["/bin/sh", "-c", "python3 -I inventory.py 2>/dev/null || /usr/bin/python3 -I inventory.py"]
+table = "rules"
+fts = true
+jq = '.[] | {tool: "python", code: .name, title: .name, subtitle: "Python · \(.role)", url: "https://docs.python.org/3/\(.uri)"}'
 
 [[route.item]]
 title = "{title}"

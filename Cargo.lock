@@ -19,7 +19,7 @@ dependencies = [
 
 [[package]]
 name = "alfred-pydocs"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "tokio",
  "we-love-alfred",
