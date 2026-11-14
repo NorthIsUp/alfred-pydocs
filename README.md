@@ -9,12 +9,13 @@ is, and press Enter to open its docs. ⌘C copies the code.
 | `ty` | ty rules | `ty unresolved-import` |
 | `pyright` | pyright rules (`report*` settings) | `pyright optional member` |
 | `pep` | PEPs | `pep 8`, `pep type hints` |
-| `py` | all of the above, plus the standard library's classes, functions and modules | `py dict`, `py typing` |
+| `pydocs` | the standard library's classes, functions and modules | `pydocs dict`, `pydocs pathlib` |
+| `py` | all of the above | `py dict`, `py typing` |
 
 Install: download `alfred-pydocs.alfredworkflow` from the
 [latest release](https://github.com/NorthIsUp/alfred-pydocs/releases/latest) and open it.
-It then checks for new releases daily and opens them, so Alfred offers its update dialog; `pydocs`
-or `py update` checks now and shows progress. `py clear cache` rebuilds the index.
+It then checks for new releases daily and opens them, so Alfred offers its update dialog; `py update`
+checks now and shows progress plus the changelog. `py clear cache` rebuilds the index.
 
 The index is built on first use and rebuilt weekly: ruff and ty rules from the installed tools
 (falling back to `mise exec <tool>@latest`, then `uvx`), pyright rules from its config schema,
