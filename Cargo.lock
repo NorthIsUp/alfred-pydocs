@@ -19,7 +19,7 @@ dependencies = [
 
 [[package]]
 name = "alfred-pydocs"
-version = "0.3.1"
+version = "0.3.2"
 dependencies = [
  "tokio",
  "we-love-alfred",
@@ -1911,7 +1911,7 @@ dependencies = [
 [[package]]
 name = "we-love-alfred"
 version = "0.1.0"
-source = "git+https://github.com/NorthIsUp/north#952c546fd732d3d76c3f331f3d238b294770029a"
+source = "git+https://github.com/NorthIsUp/north#e0cfbd3a48da281c2c933beae4d584579e1889ec"
 dependencies = [
  "chrono",
  "flate2",
