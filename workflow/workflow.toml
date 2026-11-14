@@ -6,6 +6,8 @@ cache = "alfred-pydocs"
 [update]
 repo = "NorthIsUp/alfred-pydocs"
 asset = "alfred-pydocs.alfredworkflow"
+# A new version may index differently (e.g. doc URLs), so rebuild instead of serving the old one.
+clear_cache = true
 
 # `ruff`, `ty`, `pyright` and `pep` search one source; `py` searches them all, plus the standard
 # library's documented classes, functions and modules. Enter opens the docs.
