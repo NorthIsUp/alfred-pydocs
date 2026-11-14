@@ -10,7 +10,7 @@ asset = "alfred-pydocs.alfredworkflow"
 # `ruff`, `ty`, `pyright` and `pep` search one source; `py` searches them all, plus the standard
 # library's documented classes, functions and modules. Enter opens the docs.
 [[route]]
-keywords = { ruff = "ruff", ty = "ty", pyright = "pyright", pep = "pep", py = "" }
+keywords = { ruff = "ruff", ty = "ty", pyright = "pyright", pep = "pep", pydocs = "python", py = "" }
 db = "{env.alfred_workflow_cache:-~/.cache/alfred/pydocs}/rules.db"
 error = "Lookup failed"
 refresh_every = 604800

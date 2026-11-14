@@ -321,7 +321,7 @@
 				<key>runningsubtext</key>
 				<string></string>
 				<key>script</key>
-				<string>./alfred "update"</string>
+				<string>./alfred "pydocs $1"</string>
 				<key>scriptargtype</key>
 				<integer>1</integer>
 				<key>scriptfile</key>
@@ -329,7 +329,7 @@
 				<key>subtext</key>
 				<string></string>
 				<key>title</key>
-				<string>Update Python Docs</string>
+				<string>Python docs</string>
 				<key>type</key>
 				<integer>11</integer>
 				<key>withspace</key>
